@@ -1,0 +1,60 @@
+<?php
+include('reports.php');
+include('manufacturer_report.php');
+?>
+<html>
+<head>
+	<title>Reports</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<style>
+	table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+	
+</style>
+</head>
+<body>
+<br>
+		<form style="width:50%">
+		<table>
+			
+			<?php
+				$manufacturer = $_GET['manufacturer'];
+
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$query = "SELECT Appliance_Type, COUNT(*) as CountOfAppliances FROM Appliance WHERE Manufacturer_Name = '$manufacturer' GROUP BY Appliance_Type DESC";
+				$result = mysqli_query($conn, $query);
+				
+				echo "<center><h3 style='text-align: center'>Manufacturer: " . $manufacturer. "</h3></center>";
+				
+				echo "<tr><th>Appliance_Type</th><th>Type Total</th></tr>";
+				while($row = mysqli_fetch_array($result)){
+				echo "<td>". $row['Appliance_Type'] ."</td>
+				<td>". $row['CountOfAppliances'] ."</td>
+				</tr>";
+				}
+			?>
+		</table>
+		
+		</form>
+		</center>
+</body>
+</html>
+
+

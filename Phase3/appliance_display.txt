@@ -1,0 +1,81 @@
+<?php
+
+//$conn = mysqli_connect("localhost", "gatechUser2", "phase3", "cs6400_db23_team072");
+
+$email = $_GET["email"];
+?>
+
+<script>
+		function disableNextPage() {
+			var x = document.getElementById("app_table").rows.length
+			var n = document.getElementById("next")
+			if (x <= 1) {
+				n.disabled = "disabled";
+			}
+		}
+
+</script>
+<html>
+<head>
+	<title>Appliance Display</title>
+	<style>
+table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+<br>
+  <form method="post" action="PowerGeneration.php">
+  <center> <img src="appliance.jpg" alt="Italian Trulli"> </center>
+	<h3>Appliances</h3>
+	<h4>You have added the following appliances to your household:</h4>
+		<table id="app_table" style="width:50%">
+			<tr><th>Appliance#</th><th>Type</th><th>Manufacturer</th><th>Model</th><th>Delete</th></tr>
+			<?php
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$sql = "SELECT Appliance_ID, Appliance_Type, Manufacturer_Name, Model_Name FROM Appliance WHERE Email_Address=\"$email\" " ;
+				$result = mysqli_query($conn, $sql);
+
+				while($row = mysqli_fetch_array($result)){
+				echo "<tr>
+				<td>". $row['Appliance_ID'] ."</td>
+				<td>". $row['Appliance_Type'] ."</td>
+				<td>". $row['Manufacturer_Name'] ."</td>
+				<td>". $row['Model_Name'] ."</td>
+				<td>
+				<p><a href = 'delete_appliance.php?id=".$row['Appliance_ID']."&email=".$email."'>Delete</a></p>
+				</td>
+				</tr>";
+				}
+			?>
+		</table>
+		<?php
+		echo "<p align='right'><a href = 'appliance.php?email=".$email."'>+Add another appliance</a></p>"
+		?>
+		<input type="hidden" name="email" value="<?php echo $email; ?>">
+		<input type="submit" name="submit" id="next" value="Next" onmouseover="disableNextPage()">
+
+		</form>
+
+</body>
+</html>

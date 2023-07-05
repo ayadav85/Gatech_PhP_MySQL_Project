@@ -1,0 +1,73 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+$email = $_GET["email"];
+?>
+
+<head>
+<title>Power Generation</title>
+	<style>
+table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+	
+</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>  
+<br>
+  <form method="post" action="submission.php">
+  <center> <img src="powergeneration.jpg" alt="Italian Trulli"> </center>
+	<h3>Power generation</h3> 
+	<h4>You have added these to your household:</h4> 
+		<table style="width:50%">
+			<tr><th>Num</th><th>Type</th><th>Monthly kWh</th><th>Battery kWh</th><th>Delete</th></tr>
+			<?php
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$sql = "select * from Power_Generator WHERE Email_Address=\"$email\" order by Power_ID desc" ;
+				$result = mysqli_query($conn, $sql);
+
+				while($row = mysqli_fetch_array($result)){
+				echo "<tr>
+				<td>". $row['Power_ID'] ."</td>
+				<td>". $row['Generation_Type'] ."</td>
+				<td>". $row['Average_Monthly_KWph'] ."</td>
+				<td>". $row['Battery_Storage_Capacity'] ."</td>
+				<td>
+				<p><a href = 'delete_power.php?id=".$row['Power_ID']. "&email=".$email."'>Delete</a></p>
+				</td>
+				</tr>";
+				}
+					
+			?>
+		</table>
+
+		<?php
+		echo "<p align='right'><a href = 'PowerGeneration.php?email=".$email."'>+Add more power</a></p>"
+		?>
+		
+		<input type="hidden" name="email" value="<?php echo $email; ?>">
+		<input type="submit" name="submit" value="Finish">
+		
+		</form>
+  
+</body>
+</html>

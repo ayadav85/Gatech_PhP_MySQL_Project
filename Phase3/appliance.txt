@@ -1,0 +1,166 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+$email = $_GET["email"];
+
+?>
+​
+<html>
+<head>
+	<title>Add Appliance</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type = "text/javascript">
+		function appliance_list(val){
+
+			var airHandlerDiv = document.getElementById("air_handler");
+			airHandlerDiv.style.display = "none";
+
+			var waterHandlerDiv = document.getElementById("water_heater");
+			waterHandlerDiv.style.display = "none";
+
+			airHandlerDiv.style.display = 'none';
+			waterHandlerDiv.style.display = 'none';
+
+			if (val == 'Air Handler') {
+				airHandlerDiv.style.display = 'block';
+				waterHandlerDiv.style.display = 'none';
+			} else if (val == 'Water Heater') {
+				waterHandlerDiv.style.display = 'block';
+				airHandlerDiv.style.display = 'none';
+			} else {
+				airHandlerDiv.style.display = "none";
+				waterHandlerDiv.style.display = "none";
+			}
+
+		}
+
+		function airConFunc(){
+			var checkBox = document.getElementById("air_conditioner");
+
+			var airConDiv = document.getElementById("air_con_form");
+			airConDiv.style.display = "none";
+
+			if (checkBox.checked) {
+				airConDiv.style.display = 'block';
+			} else {
+				airConDiv.style.display = "none";
+			}
+
+		}
+
+		function heaterFunc(){
+			var checkBox = document.getElementById("heater");
+
+			var heaterDiv = document.getElementById("heater_form");
+			heaterDiv.style.display = "none";
+
+			if (checkBox.checked) {
+				heaterDiv.style.display = 'block';
+			} else {
+				heaterDiv.style.display = "none";
+			}
+
+		}
+
+		function heatPumpFunc(){
+			var checkBox = document.getElementById("heat_pump");
+
+			var heatPumpDiv = document.getElementById("heat_pump_form");
+			heatPumpDiv.style.display = "none";
+
+			if (checkBox.checked) {
+				heatPumpDiv.style.display = 'block';
+			} else {
+				heatPumpDiv.style.display = "none";
+			}
+
+		}
+
+	</script>
+</head>
+<body>
+	<form method="post" action="insert_appliance.php">
+	<center> <img src="appliance.jpg" alt="Italian Trulli"> </center>
+	<h3>Add Appliance</h3> </center>
+
+		<label>Appliance Type:</label>
+		<select name="appliance_type" onchange = "appliance_list(this.value)" require>
+			<option value="Air Handler">Air Handler</option>
+			<option value="Water Heater">Water Heater</option>
+		</select><br><br>
+
+		<label>Manufacturer:</label>
+		<select name="manufacturer" id="manufacturer" require>
+		<?php
+			$sql = mysqli_query($conn, "SELECT Manufacturer_Name FROM Manufacturer");
+			while ($row = $sql->fetch_assoc()){
+				echo "<option value=\"" . $row['Manufacturer_Name'] . "\">" .$row['Manufacturer_Name']. "</option>";
+			}
+			mysqli_close($conn)
+		?>
+		</select><br><br>
+
+		<label>Model Name:</label>
+		<input type="text" name="model_name" required>
+		<br><br>
+
+		<label>BTU rating:</label>
+		<input type="number" name="btu_rating">
+		<br><br>
+
+		<br>
+
+		<div id="air_handler" style="display: block">
+			<label>Air Handler Options:</label>
+			<input type="checkbox" name="air_conditioner" id="air_conditioner" value="Air Conditioner" onclick="airConFunc()">Air Conditioner
+			<input type="checkbox" name="heater" id="heater" value="Heater" onclick="heaterFunc()" >Heater
+			<input type="checkbox" name="heat_pump" id="heat_pump" value="Heat Pump" onclick="heatPumpFunc()">Heat Pump<br><br>
+
+			<div id="air_con_form" style="display: none">
+				<label>Energy Efficiency Ratio:</label>
+				<input type="number" name="efficiency_ratio" step="0.1"><br><br>
+			</div>
+
+			<div id="heater_form" style="display: none">
+				<label>Energy Source:</label>
+				<select name="energy_source_air">
+					<option value="Electric">Electric</option>
+					<option value="Gas">Gas</option>
+					<option value="Fuel oil">Fuel Oil</option>
+				</select>
+			</div>
+
+			<div id="heat_pump_form" style="display: none">
+				<label>Seasonal Energy Efficiency Ratio:</label>
+				<input type="number" name="seer" step="0.1"><br><br>
+	
+				<label>Heating seasonal performance factor:</label>
+				<input type="number" name="hspf" step="0.1"><br><br>
+			</div>
+		</div>
+
+		<div id="water_heater" style="display: none">
+			<label>Energy Source:</label>
+			<select name="energy_source">
+				<option value="Electric">Electric</option>
+				<option value="Gas">Gas</option>
+				<option value="Thermosolar">Thermosolar</option>
+				<option value="Heat Pump">Heat Pump</option>
+			</select><br><br>
+
+			<label>Capacity (gallons):</label>
+			<input type="number" name="capacity_gallons" step="0.1" if>
+			<br><br>
+
+
+			<label>Temperature:</label>
+			<input type="number" name="temerature_wh">
+		</div>
+
+		<input type="hidden" name="email" value="<?php echo $email; ?>">
+		<input type="submit" name="submit" value="Next">
+	</form>
+
+
+</body>
+</html>

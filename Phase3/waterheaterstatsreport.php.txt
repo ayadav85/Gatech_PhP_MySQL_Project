@@ -1,0 +1,68 @@
+<?php
+include('reports.php');
+include('waterheaterstatistics.php');
+?>
+
+<html>
+<head>
+  <style>
+  table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 5px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+<form>
+
+  <table id="app_table" style="width:100%">
+    <tr><th>Energy Src</th><th>MinCap</th><th>AvgCap</th><th>MaxCap</th><th>AvgTemp</th><th>MinTemp</th><th>MaxTemp</th></tr>
+    <?php
+	$state = $_GET['state'];
+
+    $conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+    $sql = "SELECT Energy_Source , ROUND(MIN(Capacity),0) as MinCapacity, ROUND(AVG(Capacity),0) as AvgCapacity, ROUND(MAX(Capacity),0) as MaxCapacity, ROUND(AVG(Temperature),1) as AvgTemperature, ROUND(MIN(Temperature),1) as MinTemperature, ROUND(MAX(Temperature),1) as MaxTemperature
+	FROM Postal_Code P, Household H, Appliance A, Water_Heater W
+	WHERE P.PostalCode = H.Postalcode
+	AND A.Email_Address = H.Email_Address
+	AND A.Appliance_ID = W.Appliance_ID
+	AND State='$state' and Appliance_Type='Water Heater'
+	GROUP BY Energy_Source";
+
+    $result = mysqli_query($conn, $sql);
+
+    while($row = mysqli_fetch_array($result)){
+      echo "<tr>
+      <td>". $row['Energy_Source'] ."</td>
+      <td>". $row['MinCapacity'] ."</td>
+      <td>". $row['AvgCapacity'] ."</td>
+      <td>". $row['MaxCapacity'] ."</td>
+      <td>". $row['AvgTemperature'] ."</td>
+	  <td>". $row['MinTemperature'] ."</td>
+	  <td>". $row['MaxTemperature'] ."</td>
+      </tr>";
+    }
+
+    ?>
+  </table>
+</form>
+</body>
+</html>

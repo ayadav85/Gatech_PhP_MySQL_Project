@@ -1,0 +1,22 @@
+
+
+<head>
+	<title>Welcome Page</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+<br>
+	<center> 
+	<h2>Welcome to Alternakraft!</h2>
+	</center>
+	<form>
+		<center>
+		Please choose what you'd like to do:
+		<br><br>		
+		<a href="household.html">Enter my household info</a><br><br>
+		<a href="reports.php">View reports/query data</a>
+		</center>
+	</form>
+</body>
+

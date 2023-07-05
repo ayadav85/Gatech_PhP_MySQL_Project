@@ -1,0 +1,9 @@
+
+<head>
+	<form style="width:60%" method="get" action="manufacturer_model_search_report.php">
+	<h4> Enter the Manufacturer Name or Model Name to be searched : </h4>
+    <input type="text" name="search" required>
+    <input style="align-self:left" type="submit" name="submit" value="Search">
+  </form>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>

@@ -1,0 +1,23 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+
+  $email = $_POST["email"];
+  $power_type = $_POST['power_type'];
+  $monthly_kwh = $_POST['monthly_kwh'];
+  $storage_kwh = $_POST['storage_kwh'];
+  
+  $getmaxid = "SELECT Power_ID from Power_Generator order by Power_ID desc";
+  $maxResult = mysqli_query($conn, $getmaxid);
+  $result = mysqli_fetch_array($maxResult);
+  $id = $result['Power_ID']+1;
+  
+  $sql = "INSERT INTO Power_Generator (Email_Address, Power_ID, Generation_Type, Average_Monthly_KWph, Battery_Storage_Capacity) VALUES ('$email', '$id', '$power_type', '$monthly_kwh', '$storage_kwh')";
+  
+  $respMain = mysqli_query($conn, $sql);
+	 
+	header("Location: display_power.php?email=$email");
+	  
+	
+?>

@@ -1,0 +1,60 @@
+<?php
+include('reports.php');
+include('HeatingCooling.php');
+?>
+
+<html>
+<head>
+  <style>
+  table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<form>
+  <h3>Heater</h3>
+  <table id="app_table" style="width:50%">
+    <tr><th>household type</th><th>number of heaters </th><th>avg heater btus</th></tr>
+    <?php
+    $conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+    $sql = "SELECT Household_Type, COUNT(*) as HeaterCount,
+    ROUND(avg(BTU_Rating),0) as AvgHeaterBTU
+    FROM Appliance A, Heater C, Household H
+    WHERE A.Appliance_ID=C.Appliance_ID AND A.Email_Address=H.Email_Address
+    GROUP BY Household_Type";
+	
+    //echo $sql;
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result)){
+      echo "<tr>
+      <td>". $row['Household_Type'] ."</td>
+      <td>". $row['HeaterCount'] ."</td>
+      <td>". $row['AvgHeaterBTU'] ."</td>
+      </tr>";
+    }
+    ?>
+  </table>
+  </form>
+</body>
+</html>

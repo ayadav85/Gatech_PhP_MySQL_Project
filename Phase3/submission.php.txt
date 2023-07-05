@@ -1,0 +1,16 @@
+<html>
+<head>
+	<title>Submission Completed</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<form>
+
+	<center> <img src="done.png"> </center>
+	<h3>Submission Completed !</h3> </center>
+    <p>Thank you for providing your information to Alternakraft!</p>
+	
+	<p align="left"><a href = 'Welcome.php'>Return to main menu</a></p>
+	</form>
+</body>
+</html>

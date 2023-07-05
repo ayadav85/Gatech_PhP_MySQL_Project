@@ -1,0 +1,89 @@
+
+<html>
+<head>
+	<title>Reports</title>
+	<style>
+table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+	
+</style>
+</head>
+<body>	
+<br>
+		<form>
+		<h3 style="text-align: center">Water Heater Statistics by State for temperature</h3>			
+		
+		<table style="width:10%">
+			<tr><th>State</th><th>Avg_Capacity</th><th>Avg_BTU_Rating</th><th>Avg_Temperature</th><th>Count</th></tr>
+			<?php
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$sql = "SELECT State, ROUND(AVG(Capacity),0) as Avg_Capacity, ROUND(AVG(BTU_Rating),0) as Avg_BTU_Rating, ROUND(AVG(Temperature),1) as Avg_Temperature, COUNT(A.Appliance_ID) AS NoOfWaterHeaterWithTemperature
+						FROM Postal_Code P, Household H, Appliance A, Water_Heater W
+						WHERE P.PostalCode = H.PostalCode
+						AND A.Email_Address = H.Email_Address
+						AND A.Appliance_ID = W.Appliance_ID
+						GROUP BY State";
+				$result = mysqli_query($conn, $sql);
+				
+				while($row = mysqli_fetch_array($result)){
+				echo "<tr>
+				<td><a href='waterheaterstatisticsReport.php?state=". $row['State'] ."'> ". $row['State'] . "</a></td>
+				<td>". $row['Avg_Capacity'] ."</td>
+				<td>". $row['Avg_BTU_Rating'] ."</td>
+				<td>". $row['Avg_Temperature'] ."</td>
+				<td>". $row['NoOfWaterHeaterWithTemperature'] ."</td>
+				</tr>";
+				}
+			?>
+		</table><br>
+		
+		<h3 style="text-align: center">Water Heater Statistics by State for No Temperature</h3>			
+		
+		<table style="width:50%">
+			<tr><th>State</th><th>Avg_Capacity</th><th>Avg_BTU_Rating</th><th>Avg_Temperature</th><th>Count</th></tr>
+			<?php
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$sql = "SELECT State, ROUND(AVG(Capacity),0) as Avg_Capacity, ROUND(AVG(BTU_Rating),0) as Avg_BTU_Rating, ROUND(AVG(Temperature),1) as Avg_Temperature, COUNT(A.Appliance_ID) AS NoOfWaterHeaterWithoutTemperature
+						FROM Postal_Code P, Household H, Appliance A, Water_Heater W
+						WHERE P.PostalCode = H.PostalCode
+						AND A.Email_Address = H.Email_Address
+						AND A.Appliance_ID = W.Appliance_ID
+						AND Temperature IS NULL
+						GROUP BY State";
+				$result = mysqli_query($conn, $sql);
+				
+				while($row = mysqli_fetch_array($result)){
+				echo "<tr>
+				<td>". $row['State'] ."</td>
+				<td>". $row['Avg_Capacity'] ."</td>
+				<td>". $row['Avg_BTU_Rating'] ."</td>
+				<td>". $row['Avg_Temperature'] ."</td>
+				<td>". $row['NoOfWaterHeaterWithoutTemperature'] ."</td>
+				</tr>";
+				}
+			?>
+		</table><br>
+		
+		<p align="right"><a href = 'reports.php'>Back to Reports</a></p>
+		
+		</form>
+</body>
+</html>
+

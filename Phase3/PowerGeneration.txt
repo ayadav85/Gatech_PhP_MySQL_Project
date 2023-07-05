@@ -1,0 +1,34 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+$email = (isset($_POST['email']) && !empty($_POST['email']))? $_POST['email'] : $_GET["email"];
+?>
+
+<head>
+<title>Add Power Generation</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<form action="insert_power.php" method = 'post'> 
+
+<center> <img src="powergeneration.jpg"> </center>
+	<h3>Add power generation</h3> </center>
+           <p>Please provide power generation details.</p>
+           <label>Power Type:</label>
+		<select name="power_type">
+			<option value="Solar">Solar</option>
+			<option value="Wind">Wind</option>
+			<option value="Hydro">Hydro</option>
+			<option value="Geothermal">Geothermal</option>
+		</select><br><br>
+		<label>Monthly kWh:</label>
+		<input type="number" name="monthly_kwh"><br><br>
+		<label>Storage kWh:</label>
+		<input type="number" name="storage_kwh"><br><br>
+		
+		<input type="hidden" name="email" value="<?php echo $email; ?>">
+		
+		<input type="submit" value="Add" >
+		<input type="button" value="Skip" onclick="window.location.href='submission.php'">
+    </form>
+	

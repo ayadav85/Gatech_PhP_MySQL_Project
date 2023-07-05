@@ -1,0 +1,297 @@
+
+-- CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+-- CREATE USER 'gatechUser'@'localhost' IDENTIFIED BY 'phase3';
+CREATE USER IF NOT EXISTS gatechUser@localhost IDENTIFIED BY 'phase3';
+
+DROP DATABASE IF EXISTS `cs6400_db23_team072`; 
+SET default_storage_engine=InnoDB;
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE DATABASE IF NOT EXISTS cs6400_db23_team072 
+    DEFAULT CHARACTER SET utf8mb4 
+    DEFAULT COLLATE utf8mb4_unicode_ci;
+	
+USE cs6400_db23_team072;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON *.* TO 'gatechUser'@'localhost';
+GRANT ALL PRIVILEGES ON `cs6400_db23_team072`.* TO 'gatechUser'@'localhost';
+GRANT ALL PRIVILEGES ON `cs6400_db23_team072`.* TO 'gatechUser'@'localhost';
+FLUSH PRIVILEGES;
+
+-- Tables 
+
+CREATE TABLE Postal_Code (
+	PostalCode VARCHAR(5) NOT NULL,
+	City VARCHAR(50) NOT NULL,
+	State VARCHAR(50) NOT NULL,
+	Latitude FLOAT NOT NULL,
+	Longitude FLOAT NOT NULL,
+	PRIMARY KEY(PostalCode)	
+);
+
+CREATE TABLE Household (
+	Email_Address VARCHAR(50) NOT NULL,
+    Square_footage INT NOT NULL,
+    Household_Type VARCHAR(25) NOT NULL,
+    Heating INT, 
+    Cooling INT,
+	PostalCode VARCHAR(5) NOT NULL,
+    PRIMARY KEY (Email_Address),
+	CONSTRAINT fk_Household_PostalCode_Postal_Code_PostalCode FOREIGN KEY (PostalCode) REFERENCES Postal_Code(PostalCode)
+);
+
+CREATE TABLE Public_Utilites(
+	Email_Address VARCHAR(50) NOT NULL,
+	Public_Utilites VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Email_Address, Public_Utilites),
+	CONSTRAINT fk_Public_Utilities_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address)
+);
+
+CREATE TABLE Power_Generator(
+	Email_Address VARCHAR(50) NOT NULL,
+	Power_ID INT NOT NULL,
+	Generation_Type VARCHAR(50) NOT NULL,
+	Average_Monthly_KWph INT NOT NULL,  
+	Battery_Storage_Capacity INT NOT NULL,
+	PRIMARY KEY (Power_ID, Email_Address),
+	CONSTRAINT fk_Power_Generator_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address)
+);
+
+CREATE TABLE Manufacturer(
+	Manufacturer_Name VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Manufacturer_Name)
+);
+
+CREATE TABLE Appliance(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,  
+	Manufacturer_Name VARCHAR(50) NOT NULL,
+	Model_Name VARCHAR(50), 
+	BTU_Rating INT NOT NULL,
+	Appliance_Type VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Appliance_ID, Email_Address),
+	CONSTRAINT fk_Appliance_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Appliance_Manufacturer_Name_Manufacturer_Manufacturer_Name FOREIGN KEY (Manufacturer_Name) REFERENCES Manufacturer(Manufacturer_Name)
+);
+
+CREATE TABLE Water_Heater(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,
+	Capacity FLOAT NOT NULL,
+	Temperature INT,
+	Energy_Source  VARCHAR(20) NOT NULL,
+	PRIMARY KEY(Appliance_ID, Email_Address),
+	CONSTRAINT fk_Water_Heater_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Water_Heater_Appliance_ID_Appliance_Appliance_ID FOREIGN KEY (Appliance_ID) REFERENCES Appliance(Appliance_ID)
+);
+
+CREATE TABLE Air_Handler(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,
+	PRIMARY KEY(Appliance_ID, Email_Address),
+	CONSTRAINT fk_Air_Handler_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Air_Handler_Appliance_ID_Appliance_Appliance_ID FOREIGN KEY (Appliance_ID) REFERENCES Appliance(Appliance_ID)
+);
+
+CREATE TABLE Air_Conditioner(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,
+	Energy_Efficiency_Ratio FLOAT NOT NULL,
+	PRIMARY KEY(Appliance_ID, Email_Address),
+	CONSTRAINT fk_Air_Conditioner_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Air_Conditioner_Appliance_ID_Appliance_Appliance_ID FOREIGN KEY (Appliance_ID) REFERENCES Appliance(Appliance_ID)
+);
+
+CREATE TABLE Heater(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,
+	Energy_Source VARCHAR(50) NOT NULL,
+	PRIMARY KEY(Appliance_ID, Email_Address),
+	CONSTRAINT fk_Heater_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Heater_Appliance_ID_Appliance_Appliance_ID FOREIGN KEY (Appliance_ID) REFERENCES Appliance(Appliance_ID)
+);
+
+CREATE TABLE Heat_Pump(
+	Email_Address VARCHAR(50) NOT NULL,
+	Appliance_ID INT NOT NULL,
+	Heating_Seasonal_Performance_Factor FLOAT NOT NULL,
+	Seasonal_Energy_Efficiency_Rating FLOAT NOT NULL,
+	PRIMARY KEY(Appliance_ID, Email_Address),
+	CONSTRAINT fk_Heat_Pump_Email_Address_Household_Email_Address FOREIGN KEY (Email_Address) REFERENCES Household(Email_Address),
+	CONSTRAINT fk_Heat_Pump_Appliance_ID_Appliance_Appliance_ID FOREIGN KEY (Appliance_ID) REFERENCES Appliance(Appliance_ID)
+);
+
+-- Insert into Postal_Code TABLE
+
+INSERT INTO Postal_Code (PostalCode, City, State, Latitude, Longitude)
+VALUES ('55302', 'Annandale', 'MN', 45.246631, -94.11692),
+('20227', 'Washington', 'DC', 38.893311, -77.014647),
+('14043', 'Depew', 'NY', 42.904958, -78.7006),
+('15278', 'Pittsburgh', 'PA', 40.434436, -80.024817),
+('24062', 'Blacksburg', 'VA', 37.174227, -80.395698),
+('00623', 'Cabo Rojo', 'PR', 18.0864, -67.1522),
+('02472', 'Watertown', 'MA', 42.3713, -71.182),
+('30334', 'Atlanta', '	GA', 33.7027, -84.4391),
+('36879', 'Waverly', '	AL', 32.7335, -85.5532),
+('53031', 'Hingham', 'WI', 43.6394, -87.9157),
+('60651', 'Chicago', 'IL', 41.9015, -87.7405),
+('81624', 'Collbran', 'CO', 39.2202, -107.934),
+('82718', 'Gillette', 'WY', 43.94, -105.524),
+('89317', 'Lund', 'NV', 38.8354, -115.026),
+('92232', 'Calexico', 'CA', 33.0262, -115.285),
+('97304', 'Salem', 'OR', 44.9702, -123.08),
+('99671', 'Stebbins', 'AK', 63.5119, -162.275),
+('23120', 'Ayodhya', 'UP', 20.18, 50.15),
+('23122', 'Andhra', 'AP', 20.18, 50.15),
+('23123', 'Bareily', 'UP', 20.18, 50.15);
+
+
+-- Insert into Household TABLE
+
+INSERT INTO Household (Email_Address, Square_footage, Household_Type, Heating, Cooling, PostalCode)
+VALUES ('user6@gmail.com', 1900, 'House', 56, 15, '55302'),
+('user1@gmail.com', 2100, 'Apartment', 65, 10, '97304'),
+('user2@gmail.com', 2100, 'Apartment', 65, 10, '97304'),
+('user3@gmail.com', 2100, 'Apartment', 65, 10, '97304'),
+('user4@gmail.com', 2100, 'Apartment', 65, 10, '81624'),
+('user5@gmail.com', 2100, 'Apartment', 65, 10, '81624'),
+('user7@gmail.com', 2100, 'House', 65, 10, '81624'),
+('user8@gmail.com', 2100, 'House', 65, 10, '82718'),
+('user9@gmail.com', 2100, 'House', 65, 10, '82718'),
+('ajit@gatech.com', 1200, 'Mobile home', 70, 70, '14043'),
+('user10@gmail.com', 2100, 'Apartment', 65, 10, '89317'),
+('user11@gmail.com', 2100, 'Apartment', 65, 10, '89317'),
+('user12@gmail.com', 2100, 'Apartment', 65, 10, '92232'),
+('user13@gmail.com', 1700, 'House', 55, 5, '55302'),
+('user14@gmail.com', 2000, 'Apartment', 59, 15, '20227'),
+('user15@gmail.com', 2100, 'Apartment', 59, 10, '20227'),
+('giridhar@gatech.com', 2500, 'House', NULL, 65, '15278'),
+('leo@gatech.com', 1500, 'Apartment', 72, 68, '55302'),
+('manali@gatech.com', 2000, 'Town home', 75, NULL, '20227'),
+('praj@gatech.com', 3000, 'Town home', 75, NULL, '20227'),
+('ajit.001@gmail.com', 60, 20, 'House', 25, '23120'),
+('ajit.002@gmail.com', 40, 30, 'House', 25, '23120'),
+('ajit.2010@gmail.com', 23, 45, 'Apartment', 20, '23122'),
+('ajit.2603@gmail.com', 23, 45, 'Apartment', 20, '23123'),
+('ajit.usfca@gmail.com', 23, 45, 'Apartment', 20, '23120'),
+('anitez@gmail.com', 23, 45, 'Apartment', 20, '231222');
+
+
+-- Insert into Public_Utilites TABLE
+
+INSERT INTO Public_Utilites (Email_Address, Public_Utilites)
+VALUES ('leo@gatech.com', 'Electric'),
+('leo@gatech.com', 'Gas'),
+('giridhar@gatech.com', 'Electric'),
+('giridhar@gatech.com', 'Gas'),
+('manali@gatech.com', 'Electric'),
+('manali@gatech.com', 'Steam'),
+('praj@gatech.com', 'Electric'),
+('praj@gatech.com', 'Steam'),
+('ajit@gatech.com', 'Electric'),
+('ajit@gatech.com', 'Gas'),
+('ajit@gatech.com', 'Fuel Oil'),
+('user1@gmail.com', 'Electric'),
+('user1@gmail.com', 'Fuel Oil'),
+('user2@gmail.com', 'Gas'),
+('user3@gmail.com', 'Gas'),
+('user3@gmail.com', 'Electric'),
+('user4@gmail.com', 'Electric'),
+('user4@gmail.com', 'Gas');
+
+
+-- Insert into Power_Generator TABLE
+
+INSERT INTO Power_Generator (Email_Address, Power_ID, Generation_Type, Average_Monthly_KWph, Battery_Storage_Capacity)
+VALUES ('leo@gatech.com', 1, 'Solar-Electric', 300, 35),
+('manali@gatech.com', 2, 'Wind', 500, 78),
+('ajit@gatech.com', 3, 'Solar-Electric', 200, 38),
+('giridhar@gatech.com', 4, 'Wind', 300, 40),
+('praj@gatech.com', 5, 'Solar-Electric', 200, 70),
+('user4@gmail.com', 6, 'Wind', 300, 65),
+('user5@gmail.com', 7, 'Wind', 300, 65),
+('user5@gmail.com', 8, 'Solar-Electric', 300, 65),
+('user7@gmail.com', 9, 'Solar-Electric', 300, 65),
+('user8@gmail.com', 10, 'Solar-Electric', 300, 65),
+('user11@gmail.com', 11, 'Wind', 300, 65),
+('user12@gmail.com', 12, 'Wind', 300, 65),
+('user13@gmail.com', 13, 'Wind', 222, 70),
+('user14@gmail.com', 14, 'Wind', 222, 70),
+('user1@gmail.com', 15, 'Wind', 125, 60),
+('user2@gmail.com', 16, 'Wind', 125, 60),
+('user3@gmail.com', 17, 'Wind', 125, 60),
+('user15@gmail.com', 18, 'Wind', 222, 70);
+
+-- Insert into Manufacturer TABLE
+
+INSERT INTO Manufacturer (Manufacturer_Name)
+VALUES ('Symphony'),
+('LG'),
+('Sony'),
+('Panasonic'),
+('Whirlpool');
+
+-- Insert into Appliance TABLE
+
+INSERT INTO Appliance (Email_Address, Appliance_ID, Manufacturer_Name, Model_Name, BTU_Rating, Appliance_Type)
+VALUES ('leo@gatech.com', 1, 'Symphony', 'AB12LMNZABC', 1700, 'Air Handler'),
+('manali@gatech.com', 2, 'Whirlpool', 'CDE345OPQM', 1500, 'Water Heater'),
+('ajit@gatech.com', 3, 'Sony', 'FG678RSTD', 1200, 'Water Heater'),
+('giridhar@gatech.com', 4, 'LG', 'HI9010UVW', 1540, 'Air Handler'),
+('praj@gatech.com', 5, 'Whirlpool', 'JKD2345XY', 2000, 'Air Handler'),
+('user1@gmail.com', 6, 'LG', 'ABC1234D', 1200, 'Water Heater'),
+('user2@gmail.com', 7, 'Sony', 'DEF5675E', 1300, 'Air Handler'),
+('user3@gmail.com', 8, 'Symphony', 'GHI8905F', 1500, 'Air Handler'),
+('user4@gmail.com', 9, 'Symphony', 'JKL1235G', 5, 'Water Heater');
+
+-- Insert into Water_Heater TABLE
+
+INSERT INTO Water_Heater (Email_Address, Appliance_ID, Capacity, Temperature, Energy_Source)
+VALUES ('manali@gatech.com', 2, 122.5, 120, 'Electric'),
+('ajit@gatech.com', 3, 130.5, 130, 'Gas'),
+('praj@gatech.com', 5, 120.2, 140, 'Heat Pump'),
+('user1@gmail.com', 5, 120.2, 140, 'Electric'),
+('praj@gatech.com', 6, 125, 23, 'Gas'),
+('praj@gatech.com', 7, 125, 23, 'Heat Pump'),
+('praj@gatech.com', 8, 75, 20, 'Electric'),
+('user2@gmail.com', 9, 80, 45, 'Gas'),
+('user3@gmail.com', 9, 120, 30, 'Electric'),
+('user4@gmail.com', 2, 150.5, NULL, 'Gas'),
+('user5@gmail.com', 5, 180, NULL, 'Heat Pump');
+
+
+-- Insert into Air_Handler TABLE
+
+INSERT INTO Air_Handler (Email_Address, Appliance_ID)
+VALUES ('leo@gatech.com', 1),
+('manali@gatech.com', 2),
+('ajit@gatech.com', 3),
+('giridhar@gatech.com', 4),
+('praj@gatech.com', 5);
+
+-- Insert into Air_Conditioner TABLE
+
+INSERT INTO Air_Conditioner (Email_Address, Appliance_ID, Energy_Efficiency_Ratio)
+VALUES ('leo@gatech.com', 1, 15.5),
+('manali@gatech.com', 2, 17.2),
+('ajit@gatech.com', 3, 14.9),
+('giridhar@gatech.com', 4, 16.1),
+('praj@gatech.com', 5, 18.3);
+
+-- Insert into Heater TABLE
+
+INSERT INTO Heater (Email_Address, Appliance_ID, Energy_Source)
+VALUES ('leo@gatech.com', 1, 'Electric'),
+('manali@gatech.com', 2, 'Fuel Oil'),
+('ajit@gatech.com', 3, 'Gas'),
+('giridhar@gatech.com', 4, 'Electric'),
+('praj@gatech.com', 5, 'Fuel Oil');
+
+-- Insert into Heat_Pump TABLE
+
+INSERT INTO Heat_Pump (Email_Address, Appliance_ID, Heating_Seasonal_Performance_Factor, Seasonal_Energy_Efficiency_Rating) 
+VALUES ('leo@gatech.com', 1,  8.5, 15.0),
+('manali@gatech.com', 2, 9.2, 16.0),
+('ajit@gatech.com', 3, 7.8, 14.0),
+('giridhar@gatech.com', 4, 8.7, 11.0),
+('praj@gatech.com', 5, 9.0, 14.5);

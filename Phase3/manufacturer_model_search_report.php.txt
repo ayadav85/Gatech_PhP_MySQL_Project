@@ -1,0 +1,68 @@
+<?php
+include('reports.php');
+include('manufacturer_model_search.php');
+?>
+<html>
+<head>
+	<title>Reports</title>
+	<style>
+table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+	
+</style>
+</head>
+<body>
+<form>
+  <table id="app_table" style="width:50%">
+    <tr><th>Manufacturer_Name</th><th>Model_Name</th></tr>
+    <?php
+
+    $search = $_GET["search"];
+
+    $search = strtolower($search);
+
+    $conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+    $sql = "SELECT DISTINCT Manufacturer_Name, Model_Name FROM Appliance
+    WHERE LOWER(Manufacturer_Name) LIKE '%$search%' OR LOWER(Model_Name) LIKE '%$search%' ORDER BY Manufacturer_Name ASC, Model_Name ASC";
+
+    $result = mysqli_query($conn, $sql);
+
+    while($row = mysqli_fetch_array($result)){
+      $manufacturerColor = "";
+      $modelColor = "";
+      if(strpos(strtolower($row['Manufacturer_Name']),$search) !== false){
+        $manufacturerColor = ' bgColor=bbe899 ';
+      }
+
+      if(strpos(strtolower($row['Model_Name']),$search) !== false){
+        $modelColor = " bgColor=bbe899 ";
+      }
+      echo "<tr>
+      <td".$manufacturerColor.">". $row['Manufacturer_Name'] ."</td>
+      <td".$modelColor.">". $row['Model_Name'] ."</td>
+      </tr>";
+    }
+    ?>
+  </table>
+    <p align='right'><a href = 'reports.php'>Back to Reports</a></p>
+  </form>
+
+
+</body>

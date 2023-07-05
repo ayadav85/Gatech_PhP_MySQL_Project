@@ -1,0 +1,16 @@
+<head>
+	<title>Reports</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<form>
+
+<ul>
+			  <li><a href="ACHeatingCooling.php">Air Conditioner Heating Cooling Method details </a></li>
+			  <li><a href="HeaterHeatingCooling.php">Heater Heating Cooling Method details </a></li>
+			  <li><a href="HeatpumpHeatingCooling.php">Heat Pump Heating Cooling Method details </a></li><br><br>
+			  
+			  <li><a href = 'reports.php'>Back to Reports</a></li>
+			</ul>
+			
+</form>

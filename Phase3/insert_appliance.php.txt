@@ -1,0 +1,135 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+  //appliance
+  $email = $_POST["email"];
+  $appliance_type = $_POST['appliance_type'];
+  $manufacturer = $_POST['manufacturer'];
+  $model_name = $_POST['model_name'];
+  $btu = (isset($_POST['btu_rating']) && !empty($_POST['btu_rating']))? $_POST['btu_rating'] : 0;
+
+  //--air handler
+  //air conditioner
+  $air_conditioner = isset($_POST['air_conditioner']) ? $_POST['air_conditioner'] : "";
+  $efficiency_ratio = isset($_POST['efficiency_ratio']) ? $_POST['efficiency_ratio'] : "";
+
+  //heater
+  $heater = isset($_POST['heater']) ? $_POST['heater'] : "";
+  $energy_source_air = $_POST['energy_source_air'];
+
+  //heat pump
+  $heat_pump = isset($_POST['heat_pump']) ? $_POST['heat_pump'] : "";
+  $seer = (isset($_POST['seer']) && !empty($_POST['seer']))? $_POST['seer'] : 0;
+  $hspf = (isset($_POST['hspf']) && !empty($_POST['hspf']))? $_POST['hspf'] : 0;
+
+  //--water heater
+  $energy_source = $_POST['energy_source'];
+  $cap = (isset($_POST['capacity_gallons']) && !empty($_POST['capacity_gallons']))? $_POST['capacity_gallons'] : 0;
+  $temp = (isset($_POST['temerature_wh']) && !empty($_POST['temerature_wh']))? $_POST['temerature_wh'] : 0;
+
+  echo "The email address is: " . $email;
+  echo $appliance_type;
+  echo $manufacturer;
+  echo $model_name;
+  echo $air_conditioner;
+  echo $btu;
+
+
+  $idSQL = mysqli_query($conn, "SELECT MAX(Appliance_ID) as maxId FROM Appliance");
+  if($idSQL) {
+    echo "got id successfully!";
+  }else {
+    echo "Error: " . $idSQL . "<br>" . mysqli_error($conn);
+  }
+  $row = mysqli_fetch_assoc($idSQL);
+  echo "id is ".$row['maxId'];
+  $id = $row['maxId']+ 1;
+  echo $id;
+  //insert into appliance
+  $sql = "INSERT INTO Appliance (Email_Address, Appliance_ID, Manufacturer_Name, Model_Name, BTU_Rating, Appliance_Type) VALUES
+  ('$email', '$id', '$manufacturer', '$model_name', '$btu', '$appliance_type')";
+
+  $respMain = mysqli_query($conn, $sql);
+
+  if($respMain) {
+    echo "Appliance added successfully!";
+  }else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+  }
+
+
+  //insert into water heater
+  if ($appliance_type == "Water Heater"){
+		$sqlWH = "INSERT INTO Water_Heater (Email_Address, Appliance_ID, Capacity, Temperature, Energy_Source)
+		VALUES ('$email', '$id', '$cap', '$temp',  '$energy_source')" ;
+
+		$respWH = mysqli_query($conn, $sqlWH);
+
+		if($respWH) {
+			echo "Water heater added successfully!";
+		}else {
+			echo "Error: " . $sqlWH . "<br>" . mysqli_error($conn);
+		}
+	} else if($appliance_type == "Air Handler") {
+
+    //insert in air handler
+    $sqlAH = "INSERT INTO Air_Handler (Email_Address, Appliance_ID)
+    VALUES ('$email', '$id')";
+
+    $respAH = mysqli_query($conn, $sqlAH);
+
+    if($respAH) {
+			echo "Air Handler added successfully!";
+		}else {
+			echo "Error: " . $sqlAH . "<br>" . mysqli_error($conn);
+		}
+
+    //insert into air conditioner
+    if(!empty($air_conditioner)){
+      $sqlAC = "INSERT INTO Air_Conditioner (Email_Address, Appliance_ID, Energy_Efficiency_Ratio)
+      VALUES('$email', '$id', '$efficiency_ratio')";
+
+      $respAC = mysqli_query($conn, $sqlAC);
+      if($respAC) {
+  			echo "Air Conditioner added successfully!";
+  		}else {
+  			echo "Error: " . $sqlAC . "<br>" . mysqli_error($conn);
+  		}
+
+    }
+    //insert into heater
+    if(!empty($heater)){
+      $sqlHeat = "INSERT INTO Heater (Email_Address, Appliance_ID, Energy_Source)
+      VALUES('$email', '$id', '$energy_source_air')";
+
+      $respHeat = mysqli_query($conn, $sqlHeat);
+      if($respHeat) {
+  			echo "Heater added successfully!";
+  		}else {
+  			echo "Error: " . $sqlHeat . "<br>" . mysqli_error($conn);
+  		}
+    }
+
+    //insert into heat pump
+    if(!empty($heat_pump)){
+      $sqlHP = "INSERT INTO Heat_Pump (Email_Address, Appliance_ID, Heating_Seasonal_Performance_Factor, Seasonal_Energy_Efficiency_Rating)
+      VALUES('$email', '$id', '$hspf', '$seer')";
+
+      $respHP = mysqli_query($conn, $sqlHP);
+      if($respHP) {
+  			echo "Heat Pump added successfully!";
+  		}else {
+  			echo "Error: " . $sqlHP . "<br>" . mysqli_error($conn);
+  		}
+    }
+
+	} else {
+		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+	}
+
+  mysqli_close($conn);
+	header("Location: appliance_display.php?email=$email");
+
+
+?>

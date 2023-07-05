@@ -1,0 +1,65 @@
+<head>
+	<title>Household Information</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+<script>
+		function disableHeatingTemp() {
+			var heatingTemp = document.getElementById("heating_temp");
+			if (heatingTemp.disabled == false) {
+				heatingTemp.disabled = true;
+			} else {
+				heatingTemp.disabled = false;
+			}
+		}
+
+		function disableCoolingTemp() {
+			var coolingTemp = document.getElementById("cooling_temp");
+			if (coolingTemp.disabled == false) {
+				coolingTemp.disabled = true;
+			} else {
+				coolingTemp.disabled = false;
+			}
+		}
+</script>
+</head>
+<body>
+	<form method="post" action="household_action.php">
+	<center> <img src="household.jpg"> </center>
+	<h3>Enter household info</h3> </center>
+	<label>Email Address:</label>
+	<input type="email" name="email" placeholder="Please enter your email address" required><br><br>
+		
+	<label>Postal Code:</label>
+	<input type="text" name="postal_code" id="postal_code" placeholder="Please enter your five digit postal code" required><br><br>		
+
+	<label>Home Type:</label>
+	<select name="home_type" required>
+		<option value="Apartment">Apartment</option>
+		<option value="Town Home">Town Home</option>
+		<option value="Mobile Home">Mobile Home</option>
+		<option value="House">House</option>
+		</select><br><br>
+
+		<label>Square Footage:</label>
+		<input type="number" name="square_footage" required><br><br>
+
+		<label>Thermostat setting for heating:</label>
+		<input type="number" name="heating" id="heating_temp">
+		<input type="checkbox" name="heating_checkbox" id="heating_temp_checkbox" onclick="disableHeatingTemp()"> No heat<br><br>
+
+		<label>Thermostat setting for cooling:</label>
+		<input type="number" name="cooling" id="cooling_temp">
+		<input type="checkbox" name="cooling_checkbox" id="cooling_temp_checkbox" onclick="disableCoolingTemp()"> No cooling<br><br>
+		
+		<label>Public Utilities:</label> <i style="font-size:12px"> (If none, leave unchecked) </i><br>
+		
+		<input type="checkbox" name="utilities[]" value="Electric">Electric
+		<input type="checkbox" name="utilities[]" value="Gas">Gas
+		<input type="checkbox" name="utilities[]" value="Steam">Steam
+		<input type="checkbox" name="utilities[]" value="Fuel Oil">Fuel Oil
+
+		<input type="submit" name="next" value="Next">
+	</form>
+
+	
+</body>

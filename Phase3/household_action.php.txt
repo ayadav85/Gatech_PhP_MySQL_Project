@@ -1,0 +1,62 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+if (!$conn) {
+    die('Connection failed: ' . mysqli_connect_error());
+}
+
+// Fetch data from the user input on the form
+$email = $_POST['email'];
+$postal_code = $_POST['postal_code'];
+$home_type = $_POST['home_type'];
+$square_footage = $_POST['square_footage'];
+$heating_temperature = isset($_POST['heating']) ? $_POST['heating']: NULL ;
+$cooling_temperature = isset($_POST['cooling']) ? $_POST['cooling'] : NULL ;
+$utilities = isset($_POST['utilities']) ? $_POST['utilities'] : array();
+
+if (empty($_POST['electric'])) {
+  echo "Checked!";
+} else {
+  echo 'Not checked!';
+}
+
+echo $email;
+
+// For validating if postal code entered exists in database
+$postalcode_validate_query = "SELECT PostalCode FROM Postal_Code WHERE PostalCode = '$postal_code'";
+$postalcode_result = mysqli_query($conn, $postalcode_validate_query);
+
+// For validating if email address entered exists in database
+$email_validate_query = "SELECT Email_Address FROM Household WHERE Email_Address = '$email'";
+$email_result = mysqli_query($conn, $email_validate_query);
+
+if (mysqli_num_rows($postalcode_result) != 1) {
+	// When postal code is not present in the table; pop up error message and redirect to household form page
+	echo "<script>alert('Entered Postal Code does not exist. Please enter a valid postal code.');window.location.href='household.php';</script>";	
+}
+else if(mysqli_num_rows($email_result) == 1) {
+	// When entered email address already exist in the database; pop up the error message and redirect to household form page 
+	echo "<script>alert('Email address already exists. Please register household with another email address.');window.location.href='household.php';</script>";
+}
+else
+{	
+	$household_insert_query = "INSERT INTO Household (Email_Address, Square_footage, Household_Type, Heating, Cooling, PostalCode)
+	VALUES ('$email', '$square_footage', '$home_type', '$heating_temperature', '$cooling_temperature', '$postal_code')";
+
+	if( mysqli_query($conn, $household_insert_query)){
+	
+	foreach ($utilities as $utility) {
+		$query = "INSERT INTO Public_Utilites (Email_Address, Public_Utilites) VALUES ('$email', '$utility')";
+		mysqli_query($conn, $query);
+	}
+	
+	header("Location: appliance.php?email=$email");
+	//exit();
+	} 
+	else {
+	echo 'Error while saving household data: ' . mysqli_error($conn);
+	}	
+}
+
+?>

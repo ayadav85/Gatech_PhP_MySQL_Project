@@ -1,0 +1,56 @@
+
+<html>
+<head>
+	<title>Reports</title>
+	<style>
+table {
+      border-collapse: collapse;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #0B3861;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+	
+</style>
+</head>
+<body>	
+<br>
+		<form>
+			<h3 style="text-align: center">Top 25 Popular Manufacturers</h3>			
+		
+		<table style="width:50%">
+			<tr><th>Manufacturer_Name</th><th>Count</th><th>Drill down</th></tr>
+			<?php
+				$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+				$sql = "SELECT Manufacturer_Name,count(*) as cnt FROM Appliance group by Manufacturer_Name order by cnt desc limit 25 ";
+				$result = mysqli_query($conn, $sql);
+				
+				while($row = mysqli_fetch_array($result)){
+				echo "<tr>
+				<td>". $row['Manufacturer_Name'] ."</td>
+				<td>". $row['cnt'] ."</td>
+				<td> <p><a href = 'manufacturer_drilldown.php?manufacturer=". $row['Manufacturer_Name'] . "'>View Appliances</a></p> </td>
+				</tr>";
+				}
+			?>
+		</table><br>
+		
+		<p align="right"><a href = 'reports.php'>Back to Reports</a></p>
+		
+		</form>
+
+</body>
+</html>
+

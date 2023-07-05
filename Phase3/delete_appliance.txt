@@ -1,0 +1,78 @@
+<?php
+  $conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+  $id = $_GET["id"];
+  $email = $_GET["email"];
+
+  $sqlAC = "DELETE FROM Air_Conditioner WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sqlAC)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sqlAC . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+
+  $sqlHeat = "DELETE FROM Heater WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sqlHeat)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sqlHeat . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+
+  $sqlHP = "DELETE FROM Heat_Pump WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sqlHP)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sqlHP . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+  $sqlAH = "DELETE FROM Air_Handler WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sqlAH)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sqlAH . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+  $sqlWH = "DELETE FROM Water_Heater WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sqlWH)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sqlWH . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+
+
+  $sql = "DELETE FROM Appliance WHERE Appliance_ID=$id";
+
+  if(mysqli_query($conn, $sql)) {
+    echo "Appliance deleted successfully!";
+    //
+
+  } else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    //header("Location: appliance_display.php?email=$email");
+  }
+
+mysqli_close($conn);
+header("Location: appliance_display.php?email=$email");
+?>

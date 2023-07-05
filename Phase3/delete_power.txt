@@ -1,0 +1,15 @@
+<?php
+
+$conn = mysqli_connect("localhost", "gatechUser", "phase3", "cs6400_db23_team072");
+
+
+  $id = $_GET["id"];
+  $email = $_GET["email"];
+  
+  $sql = "DELETE FROM Power_Generator where Power_ID = '$id'" ;
+  
+  $respMain = mysqli_query($conn, $sql);
+  header("Location: display_power.php?email=$email");
+	  
+	
+?>
