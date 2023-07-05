@@ -1,0 +1,80 @@
+CREATE TABLE Postal_Code (
+	Postal_Code VARCHAR(5) NOT NULL,
+	City VARCHAR(50) NOT NULL,
+	State VARCHAR(50) NOT NULL,
+	Latitude FLOAT NOT NULL,
+	Longitude FLOAT NOT NULL,
+	PRIMARY KEY(Postal_Code),
+);
+
+CREATE TABLE Household (
+	Email_Address VARCHAR(50) NOT NULL,
+    Square_footage INT NOT NULL,
+    Household_Type VARCHAR(25) NOT NULL,
+    Heating FLOAT NOT NULL,
+    Cooling FLOAT NOT NULL,
+    PRIMARY KEY (Email_Address),
+	Postal_Code VARCHAR(5) NOT NULL references Postal_Code(Postal_Code),
+);
+
+CREATE TABLE Public_Utilites(
+	Email_Address VARCHAR(50) references Household(Email_Address),
+	Public_Utilites VARCHAR(50),
+);
+
+CREATE TABLE Power_Generation(
+	Email_Address VARCHAR(50) references Household(Email_Address),
+	Power_ID INT NOT NULL,
+	Generation_Type VARCHAR(50) NOT NULL,
+	Average_Monthly_KWph FLOAT NOT NULL,
+	Battery_Storage_Capacity FLOAT NOT NULL,
+);
+
+CREATE TABLE Manufacture(
+	Manufacturer_Name VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Manufacturer_Name),
+);
+
+CREATE TABLE Appliance(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL,
+	Manufacturer_Name VARCHAR(50) NOT NULL references Manufacture(Manufacturer_Name),
+	Model_Name VARCHAR(50) NOT NULL,
+	BTU_Rating FLOAT NOT NULL,
+	Appliance_Type VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Appliance_ID),
+);
+
+CREATE TABLE Water_Heater(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL references Appliance(Appliance_ID),
+	Capacity FLOAT NOT NULL,
+	Temperature FLOAT,
+	Energy_Source INT NOT NULL
+);
+
+CREATE TABLE Air_Handler(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL references Appliance(Appliance_ID),
+	Heating_Cooling_Method VARCHAR(50) NOT NULL,
+);
+
+CREATE TABLE Air_Conditioner(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL references Appliance(Appliance_ID),
+	Energy_Efficiency_Ratio FLOAT NOT NULL,
+);
+
+CREATE TABLE Heater(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL references Appliance(Appliance_ID),
+	Energy_Source VARCHAR(50) NOT NULL,
+);
+
+
+CREATE TABLE Heat_Pump(
+	Email_Address VARCHAR(50) NOT NULL references Household(Email_Address),
+	Appliance_ID INT NOT NULL references Appliance(Appliance_ID),
+	Heating_Seasonal_Performance_Factor FLOAT NOT NULL,
+	Seasonal_Energy_Efficiency_Rating FLOAT NOT NULL,
+);
